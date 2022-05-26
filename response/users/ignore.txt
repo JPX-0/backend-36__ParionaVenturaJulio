@@ -1,0 +1,2 @@
+github no sube carptas vacias, por ello creo este archivo.
+--- Ignorar ---

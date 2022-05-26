@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrito</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <!-- boostrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous" defer></script>
+    <!-- css -->
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body>
+    <!-- header -->
+    <ul class="container nav nav-tabs header">
+      <a class="navbar-brand" href="/">Navbar</a>
+      <li class="nav-item dropdown">
+        <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Menú</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/profile">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/products">Productos</a></li>
+          <li><a class="dropdown-item" href="#">Carrito</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">logout</a></li>
+        </ul>
+      </li>
+    </ul>
+    <!-- main -->
+    <main class="main container">
+      <h1>Carrito</h1>
+      <section class="main__products main__cart">
+        <% if (products.length != 0) { %>
+          <section class="main__cart-container">
+            <% products.forEach(element => { %>
+              <figure>
+                <picture>
+                  <img src="<%= element.thumbnail %>" alt="<%= element.title %>">
+                </picture>
+                <h3><%= element.title %></h3>
+                <p>$<%= element.price %></p>
+              </figure>
+            <% }) %>
+          </section>
+          <a href="/buy?success=true" class="btn btn-success m-auto" style="width: 50%;">Comprar</a>
+        <% } else { %>
+          <p>Aun no tines productos</p>
+        <% } %>
+      </section>
+    </main>
+    <script src="js/main.js"></script>
+  </body>
+</html>

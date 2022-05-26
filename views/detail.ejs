@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles del producto</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <!-- boostrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous" defer></script>
+    <!-- css -->
+    <link rel="stylesheet" href="../css/estilos.css" />
+  </head>
+  <body>
+    <!-- header -->
+    <ul class="container nav nav-tabs header">
+      <a class="navbar-brand" href="/">Navbar</a>
+      <li class="nav-item dropdown">
+        <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Menú</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/profile">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/products">Productos</a></li>
+          <li><a class="dropdown-item" href="/cart">Carrito</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">logout</a></li>
+        </ul>
+      </li>
+    </ul>
+    <!-- main -->
+    <main class="main container">
+      <h1>Detalles del producto</h1>
+      <section class="main__products main__detail">
+        <% if (product.length != 0) { %>
+          <picture class="figure">
+            <img src="<%= product.thumbnail %>" alt="<%= product.title %>" class="figure-img img-fluid rounded">
+          </picture>
+          <section>
+            <article>
+              <h2 style="color: red; text-transform: uppercase;"><%= product.title %></h2>
+              <p><span style="font-weight: bold;">price:</span> $<%= product.price %></p>
+              <p><span style="font-weight: bold;">Dscription:</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nisi ex iste quae quam minima reiciendis atque nostrum magni sit autem laudantium sunt odio ad culpa facere, mollitia architecto aperiam at!</p>
+            </article>
+            <form action="/add?id=<%= product._id %>&qty=1" method="post" style="width: 65%; margin: auto;">
+              <div class="input-group mb-3">
+                <button type="button" class="btn btn-outline-secondary">-</button>
+                <input type="number" name="qty" id="qty" value="1" class="form-control text-center" disabled>
+                <button type="button" class="btn btn-outline-secondary">+</button>
+              </div>
+              <button type="submit" class="btn btn-success">Añadir al carrito</button>
+            </form>
+          </section>
+        <% } else { %>
+          <p>Cargano...</p>
+        <% } %>
+      </section>
+    </main>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
