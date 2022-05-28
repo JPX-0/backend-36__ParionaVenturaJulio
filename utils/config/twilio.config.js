@@ -3,10 +3,13 @@ import env from "./env.config.js";
 
 const twilioClient = twilio(env.ACCOUNT_SID, env.AUTH_TOKEN);
 
-const sendMessage = async (type, to, body) => {
+const sendMessage = async (type, phone, body) => {
   const from = env.TWILIO_PHONE;
-  if(type == "whatsapp") to = `whatsapp:${to.split("(")[1].split(")").join("").split(" ").join("")}`;
-  if(type == "sms") from = env.TWILIO_PHONE.split(":")[1];
+  const to = phone.split("(")[1].split(")").join("").split(" ").join("");
+  if(type == "whatsapp") {
+    from = `whatsapp:${env.TWILIO_PHONE}`;
+    to = `whatsapp:${phone.split("(")[1].split(")").join("").split(" ").join("")}`;
+  }
   try {
     const messagePayload = { from, to, body };
     await twilioClient.messages.create(messagePayload);

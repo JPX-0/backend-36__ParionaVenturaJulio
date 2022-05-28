@@ -10,10 +10,18 @@ const cartsDao = new CartsDao();
 import { createFormat } from "../../utils/formatter/time.format.js";
 import renderMail from "../../utils/config/mail.config.js";
 import sendMail from "../../utils/config/nodemailer.config.js";
+import { consoleLogger, infoLogger } from "../../utils/config/logger.config.js";
 
 const salt = async () => await bcrypt.genSalt(10);
 const createHash = async (password) => await bcrypt.hash(password, await salt());
 const isValidPassowrd = async (user, password) => await bcrypt.compare(password, user.password);
+
+const dataLocation = [
+  { code: "(+51)", prefix: "pe", country: "Perú" },
+  { code: "(+54)", prefix: "arg", country: "Argentina" },
+  { code: "(+34)", prefix: "esp", country: "España" },
+  { code: "(+57)", prefix: "co", country: "Colombia" }
+];
 
 // Passport Local Strategy
 passport.use("login", new LocalStrategy(async (userEmail, password, done) => {
@@ -31,38 +39,29 @@ passport.use("login", new LocalStrategy(async (userEmail, password, done) => {
       },
       products: []
     }
-    console.log("cart: ", cart);
     cart.push(await cartsDao.createItem(createFormat(newCart)));
-    console.log("cart: ", cart);
     await userDao.updateById(user._id, cart[0]._id);
     return done(null, user);
   }
   catch(error) { 
     (async () => await cartsDao.deleteItem(cart[0]._id))();
+    infoLogger.warn({ message: error });
     done(null, false); 
   }
 }));
 passport.use("register", new LocalStrategy(
   { passReqToCallback: true }, 
   async (req, userEmail, password, done) => {
-    console.log({ userEmail, password });
-    const locationCode = () => {
-      if(req.body.location.split(" ")[0].toLowerCase() == "pe") return "(+51)";
-      if(req.body.location.split(" ")[0].toLowerCase() == "arg") return "(+54)";
-    }
-    const country = () => {
-      if(req.body.location.split(" ")[0].toLowerCase() == "pe") return "Perú";
-      if(req.body.location.split(" ")[0].toLowerCase() == "arg") return "Argentina";
-    }
     const cart = [];
     try {
-      const phone = `${locationCode()} ${req.body.phone}`;
+      const phone = `${dataLocation.find(e => req.body.location.split(" ")[0].toLowerCase() == e.prefix).code} ${req.body.phone}`;
+      const location = dataLocation.find(e => req.body.location.split(" ")[0].toLowerCase() == e.prefix).country;
       const newCart = {
         author: {
           firstname: req.body.firstname,
           lastname: req.body.lastname,
           email: userEmail,
-          location: country(),
+          location,
           phone
         },
         products: []
@@ -73,7 +72,7 @@ passport.use("register", new LocalStrategy(
         email: userEmail,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        location: country(),
+        location,
         phone,
         myCart: cart[0]._id,
         admin: userEmail.split(".")[0] == "admin" ? true : false,
@@ -86,6 +85,7 @@ passport.use("register", new LocalStrategy(
     }
     catch (error) { 
       (async () => await cartsDao.deleteItem(cart[0]._id))();
+      infoLogger.warn({ message: error });
       done(null, false); 
     }
   }
@@ -93,13 +93,13 @@ passport.use("register", new LocalStrategy(
 
 // Serializacion:
 passport.serializeUser((user, done) => {
-  console.log("Inside serializer");
+  consoleLogger._log("Inside serializer");
   done(null, user._id);
 })
 
 // Deserializacion:
 passport.deserializeUser(async (id, done) => {
-  console.log("Inside deserializer");
+  consoleLogger._log("Inside deserializer");
   done(null, await userDao.getById(id));
 })
 
